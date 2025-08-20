@@ -60,7 +60,7 @@ ament_target_dependencies(MrsUavStateEstimators_OpenVins
   ${DEPENDENCIES}
 )
 
-rclcpp_components_register_nodes(MrsUavStateEstimators_OpenVins PLUGIN "mrs_open_vins_estimator_plugin::OpenVins" EXECUTABLE MrsUavStateEstimators_OpenVins)
+rclcpp_components_register_nodes(MrsUavStateEstimators_OpenVins PLUGIN "open_vins::OpenVins" EXECUTABLE MrsUavStateEstimators_OpenVins)
 
 target_compile_definitions(MrsUavStateEstimators_OpenVins PRIVATE USE_ROS_TIMER=${USE_ROS_TIMER})
 
