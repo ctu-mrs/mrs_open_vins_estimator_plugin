@@ -82,7 +82,7 @@ install(TARGETS ${LIBRARIES}
 install(
   DIRECTORY custom_configs
   USE_SOURCE_PERMISSIONS
-  DESTINATION lib/${PROJECT_NAME}
+  DESTINATION share/${PROJECT_NAME}
 )
 
 ament_export_targets(
