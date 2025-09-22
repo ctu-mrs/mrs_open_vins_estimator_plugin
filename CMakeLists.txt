@@ -37,7 +37,7 @@ set(DEPENDENCIES
 )
 
 set(LIBRARIES
-  MrsUavStateEstimators_OpenVins
+  MrsUavStateEstimators_OpenVins_component
 )
 
 foreach(DEP IN LISTS DEPENDENCIES)
@@ -46,34 +46,49 @@ endforeach()
 
 include_directories(
   ${rclcpp_INCLUDE_DIRS}
+  ${mrs_uav_state_estimators_INCLUDE_DIRS}
 )
 
 ###########
 ## Build ##
 ###########
 
-add_library(MrsUavStateEstimators_OpenVins
+add_library(MrsUavStateEstimators_OpenVins_component SHARED
   src/open_vins_plugin.cpp
 )
 
-ament_target_dependencies(MrsUavStateEstimators_OpenVins
+ament_target_dependencies(MrsUavStateEstimators_OpenVins_component
   ${DEPENDENCIES}
 )
 
-rclcpp_components_register_nodes(MrsUavStateEstimators_OpenVins PLUGIN "open_vins::OpenVins" EXECUTABLE MrsUavStateEstimators_OpenVins)
+rclcpp_components_register_node(
+  MrsUavStateEstimators_OpenVins_component
+  PLUGIN "open_vins::OpenVins"
+  EXECUTABLE MrsUavStateEstimators_OpenVins
+)
 
-target_compile_definitions(MrsUavStateEstimators_OpenVins PRIVATE USE_ROS_TIMER=${USE_ROS_TIMER})
+# target_compile_definitions(
+#   MrsUavStateEstimators_OpenVins_component
+#   PRIVATE USE_ROS_TIMER=${USE_ROS_TIMER}
+# )
 
 ## --------------------------------------------------------------
 ## |                           Install                          |
 ## --------------------------------------------------------------
 
-ament_export_libraries(
-  ${LIBRARIES}
-)
+# ament_export_libraries(
+#   ${LIBRARIES}
+# )
 
-install(TARGETS ${LIBRARIES}
-  EXPORT export_${PROJECT_NAME}
+# install(TARGETS ${LIBRARIES}
+#   EXPORT export_${PROJECT_NAME}
+#   ARCHIVE DESTINATION lib
+#   LIBRARY DESTINATION lib
+#   RUNTIME DESTINATION bin
+# )
+
+install(TARGETS MrsUavStateEstimators_OpenVins_component
+  EXPORT export_MrsUavStateEstimators_OpenVins
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin
@@ -85,12 +100,31 @@ install(
   DESTINATION share/${PROJECT_NAME}
 )
 
+install(
+  DIRECTORY config
+  USE_SOURCE_PERMISSIONS
+  DESTINATION share/${PROJECT_NAME}
+)
+
+install(
+  DIRECTORY launch
+  DESTINATION share/${PROJECT_NAME}
+)
+
+# ament_export_targets(
+#   export_${PROJECT_NAME} HAS_LIBRARY_TARGET
+# )
+
 ament_export_targets(
-  export_${PROJECT_NAME} HAS_LIBRARY_TARGET
+  export_MrsUavStateEstimators_OpenVins HAS_LIBRARY_TARGET
 )
 
 ament_export_dependencies(
   ${DEPENDENCIES}
+)
+
+ament_export_libraries(
+  ${LIBRARIES}
 )
 
 ament_package()
