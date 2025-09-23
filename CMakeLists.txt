@@ -34,10 +34,11 @@ set(DEPENDENCIES
   rclcpp_components
   mrs_uav_managers
   mrs_uav_state_estimators
+  mrs_lib
 )
 
 set(LIBRARIES
-  MrsUavStateEstimators_OpenVins_component
+  MrsVinsEstimator_Plugin
 )
 
 foreach(DEP IN LISTS DEPENDENCIES)
@@ -47,48 +48,41 @@ endforeach()
 include_directories(
   ${rclcpp_INCLUDE_DIRS}
   ${mrs_uav_state_estimators_INCLUDE_DIRS}
+  ${mrs_lib_INCLUDE_DIRS}
 )
 
 ###########
 ## Build ##
 ###########
 
-add_library(MrsUavStateEstimators_OpenVins_component SHARED
+add_library(MrsVinsEstimator_Plugin SHARED
   src/open_vins_plugin.cpp
 )
 
-ament_target_dependencies(MrsUavStateEstimators_OpenVins_component
+ament_target_dependencies(MrsVinsEstimator_Plugin
   ${DEPENDENCIES}
 )
 
-rclcpp_components_register_node(
-  MrsUavStateEstimators_OpenVins_component
-  PLUGIN "open_vins::OpenVins"
-  EXECUTABLE MrsUavStateEstimators_OpenVins
-)
+target_compile_definitions(MrsVinsEstimator_Plugin PRIVATE USE_ROS_TIMER=${USE_ROS_TIMER})
 
-# target_compile_definitions(
-#   MrsUavStateEstimators_OpenVins_component
-#   PRIVATE USE_ROS_TIMER=${USE_ROS_TIMER}
-# )
+## --------------------------------------------------------------
+## |                       export plugins                       |
+## --------------------------------------------------------------
+
+# <package of the base class>, <relative path to the xml>
+pluginlib_export_plugin_description_file(mrs_uav_managers plugins.xml)
 
 ## --------------------------------------------------------------
 ## |                           Install                          |
 ## --------------------------------------------------------------
 
-# ament_export_libraries(
-#   ${LIBRARIES}
-# )
+ament_export_libraries(
+  ${LIBRARIES}
+)
 
-# install(TARGETS ${LIBRARIES}
-#   EXPORT export_${PROJECT_NAME}
-#   ARCHIVE DESTINATION lib
-#   LIBRARY DESTINATION lib
-#   RUNTIME DESTINATION bin
-# )
-
-install(TARGETS MrsUavStateEstimators_OpenVins_component
-  EXPORT export_MrsUavStateEstimators_OpenVins
+install(
+  TARGETS ${LIBRARIES}
+  EXPORT export_${PROJECT_NAME}
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin
@@ -96,35 +90,15 @@ install(TARGETS MrsUavStateEstimators_OpenVins_component
 
 install(
   DIRECTORY custom_configs
-  USE_SOURCE_PERMISSIONS
   DESTINATION share/${PROJECT_NAME}
 )
-
-install(
-  DIRECTORY config
-  USE_SOURCE_PERMISSIONS
-  DESTINATION share/${PROJECT_NAME}
-)
-
-install(
-  DIRECTORY launch
-  DESTINATION share/${PROJECT_NAME}
-)
-
-# ament_export_targets(
-#   export_${PROJECT_NAME} HAS_LIBRARY_TARGET
-# )
 
 ament_export_targets(
-  export_MrsUavStateEstimators_OpenVins HAS_LIBRARY_TARGET
+  export_${PROJECT_NAME} HAS_LIBRARY_TARGET
 )
 
 ament_export_dependencies(
   ${DEPENDENCIES}
-)
-
-ament_export_libraries(
-  ${LIBRARIES}
 )
 
 ament_package()
