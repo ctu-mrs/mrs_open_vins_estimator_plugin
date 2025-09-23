@@ -13,7 +13,7 @@ mrs_uav_managers:
     # namespace of the state estimator
     open_vins:
 
-      address: "open_vins/OpenVinsEstimatorPlugin"
+      address: "mrs_open_vins_estimator_plugin::OpenVins"
 
       requires: # data required from the hw api
         gnss: false
