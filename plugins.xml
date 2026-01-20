@@ -3,3 +3,9 @@
     <description>OpenVins state estimator</description>
   </class>
 </library>
+
+<library path="MrsVinsEstimator_Plugin2">
+  <class type="mrs_open_vins_estimator_plugin::OpenVins2" base_class_type="mrs_uav_managers::StateEstimator">
+    <description>OpenVins state estimator</description>
+  </class>
+</library>

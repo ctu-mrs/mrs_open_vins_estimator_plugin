@@ -39,6 +39,7 @@ set(DEPENDENCIES
 
 set(LIBRARIES
   MrsVinsEstimator_Plugin
+  MrsVinsEstimator_Plugin2
 )
 
 foreach(DEP IN LISTS DEPENDENCIES)
@@ -55,6 +56,8 @@ include_directories(
 ## Build ##
 ###########
 
+# plugin 1
+
 add_library(MrsVinsEstimator_Plugin SHARED
   src/open_vins_plugin.cpp
 )
@@ -64,6 +67,18 @@ ament_target_dependencies(MrsVinsEstimator_Plugin
 )
 
 target_compile_definitions(MrsVinsEstimator_Plugin PRIVATE USE_ROS_TIMER=${USE_ROS_TIMER})
+
+# plugin 2
+
+add_library(MrsVinsEstimator_Plugin2 SHARED
+  src/open_vins_plugin_2.cpp
+)
+
+ament_target_dependencies(MrsVinsEstimator_Plugin2
+  ${DEPENDENCIES}
+)
+
+target_compile_definitions(MrsVinsEstimator_Plugin2 PRIVATE USE_ROS_TIMER=${USE_ROS_TIMER})
 
 ## --------------------------------------------------------------
 ## |                       export plugins                       |
