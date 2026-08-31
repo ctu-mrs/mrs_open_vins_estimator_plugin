@@ -1,10 +1,11 @@
-cmake_minimum_required(VERSION 3.20.0)
+cmake_minimum_required(VERSION 3.28)
 cmake_policy(SET CMP0048 NEW)
 project(mrs_open_vins_estimator_plugin)
 
+# set the correct standards
+set(CMAKE_C_STANDARD 99)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
 
 # 1 == use rclcpp::Timer implementation
 # 0 == use MRS's thread timer implementation
@@ -52,6 +53,14 @@ include_directories(
   ${mrs_lib_INCLUDE_DIRS}
 )
 
+set(TARGET_DEPENDENCIES
+  rclcpp::rclcpp
+  rclcpp_components::component
+  ${mrs_uav_managers_TARGETS}
+  ${mrs_uav_state_estimators_TARGETS}
+  mrs_lib::mrs_lib
+)
+
 ###########
 ## Build ##
 ###########
@@ -62,8 +71,8 @@ add_library(MrsVinsEstimator_Plugin SHARED
   src/open_vins_plugin.cpp
 )
 
-ament_target_dependencies(MrsVinsEstimator_Plugin
-  ${DEPENDENCIES}
+target_link_libraries(MrsVinsEstimator_Plugin
+  ${TARGET_DEPENDENCIES}
 )
 
 target_compile_definitions(MrsVinsEstimator_Plugin PRIVATE USE_ROS_TIMER=${USE_ROS_TIMER})
@@ -74,8 +83,8 @@ add_library(MrsVinsEstimator_Plugin2 SHARED
   src/open_vins_plugin_2.cpp
 )
 
-ament_target_dependencies(MrsVinsEstimator_Plugin2
-  ${DEPENDENCIES}
+target_link_libraries(MrsVinsEstimator_Plugin2
+  ${TARGET_DEPENDENCIES}
 )
 
 target_compile_definitions(MrsVinsEstimator_Plugin2 PRIVATE USE_ROS_TIMER=${USE_ROS_TIMER})
